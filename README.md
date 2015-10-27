@@ -1,6 +1,6 @@
 # Eyes_Mirror
 
-Live here: (http://oryano.github.io/Eyes_Mirror)[Eyes mirror]
+Live here: [Eyes mirror](http://oryano.github.io/Eyes_Mirror)
 
 To do:
 * make particle
