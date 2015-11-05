@@ -1,5 +1,5 @@
 var ctracker;
-var ripple = 0;
+var ripples = [];
 
 
 function setup() {
@@ -13,7 +13,7 @@ function setup() {
   // setup canvas
   var cnv = createCanvas(600, 400);
   cnv.position(0, 0);
-  //do like a mirror
+  //flip to be like a mirror
   cnv.style('transform: rotateY(180deg)');
   // setup tracker
   ctracker = new clm.tracker();
@@ -26,7 +26,8 @@ function setup() {
 
 
 function draw() {
-  clear();  //like backround in draw
+  background(0,0,0);
+  //clear();
   // get array of face marker positions [x, y] format
   var positions = ctracker.getCurrentPosition();
   
@@ -39,20 +40,48 @@ function draw() {
     
     var rightEyeX = positions[32][0];
     var rightEyeY = positions[32][1];
-    ellipseMode(CENTER);
     ellipse(rightEyeX, rightEyeY, 10, 10);
+  }  
+
+  //loop thru whats in ripples[], display and changeDiam each
+  for (var i = 0; i < ripples.length; i ++ ) { 
+    ripples[i].changeDiam();
+    ripples[i].display();
+    //remove the first one (oldest)
+    if(ripples[i].lifespan < 0){
+    ripples.splice(i, 1);    //splice = remove
+   }
   }
-
-  // ripple++;
-  // stroke(255,0,0);
-  // noFill();
-  // ellipse(leftEyeX, leftEyeY, ripple, ripple);
-  // ellipse(rightEyeX, rightEyeY, ripple, ripple);
-
-  // if (ripple > 100) ripple = 0;
   
+  var leftEyeRipple = new rippelFromEye(leftEyeX,leftEyeY);
+  ripples.push(leftEyeRipple);
+  var rightEyeRipple = new rippelFromEye(rightEyeX,rightEyeY);
+  ripples.push(rightEyeRipple);
+
 }
 
+
+//------------------------------------------function to make ripples from ONE source
+function rippelFromEye(eyePosX, eyePosY, diam){
+  diam = 50;
+  this.lifespan = 255;
+
+  this.changeDiam = function() {
+    //if (diam < 150){
+    diam++;
+    this.lifespan = this.lifespan - 4;
+   // }
+  }
+
+  this.display = function() {
+  //stroke(hue(ballCol), saturation(ballCol), brightness(ballCol), this.lifespan);
+  stroke(180, 20 , 80, this.lifespan);
+  strokeWeight(2);
+  noFill();
+  ellipse(eyePosX, eyePosY, diam, diam);
+  }
+
+}
 
 
 
